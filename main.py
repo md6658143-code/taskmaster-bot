@@ -3,48 +3,46 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ADMIN_ID = int(os.getenv("ADMIN_ID", "0"))
-APPROVED_FILE = "approved_users.json"
+ADMIN_ID = int(os.getenv("ADMIN_ID","0"))
+FILE = "approved_users.json"
 
-def load_approved():
+def load():
     try:
-        with open(APPROVED_FILE, "r") as f:
+        with open(FILE,"r") as f:
             return json.load(f)
     except:
         return []
 
-def save_approved(data):
-    with open(APPROVED_FILE, "w") as f:
-        json.dump(data, f)
+def save(d):
+    with open(FILE,"w") as f:
+        json.dump(d,f)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bot cholche ✅ /myid likho")
+async def start(u,c):
+    await u.message.reply_text("Bot chalu ✅")
 
-async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(f"Tomar ID: {update.effective_user.id}")
+async def myid(u,c):
+    await u.message.reply_text(f"ID: {u.effective_user.id}")
 
-async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id!= ADMIN_ID:
-        await update.message.reply_text("Tumi admin na")
+async def approve(u,c):
+    if u.effective_user.id!=ADMIN_ID:
+        await u.message.reply_text("Admin na")
         return
-    if len(context.args)!= 1:
-        await update.message.reply_text("Use: /approve USER_ID")
+    if len(c.args)!=1:
+        await u.message.reply_text("Use /approve ID")
         return
-    uid = int(context.args[0])
-    approved = load_approved()
-    if uid not in approved:
-        approved.append(uid)
-        save_approved(approved)
-        await update.message.reply_text(f"Approved {uid}")
-    else:
-        await update.message.reply_text("Age thekei approved")
+    uid=int(c.args[0])
+    d=load()
+    if uid not in d:
+        d.append(uid)
+        save(d)
+    await u.message.reply_text(f"OK {uid}")
 
 def main():
-    app = Application.builder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("myid", myid))
-    app.add_handler(CommandHandler("approve", approve))
-    app.run_polling()
+    a=Application.builder().token(BOT_TOKEN).build()
+    a.add_handler(CommandHandler("start",start))
+    a.add_handler(CommandHandler("myid",myid))
+    a.add_handler(CommandHandler("approve",approve))
+    a.run_polling()
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
