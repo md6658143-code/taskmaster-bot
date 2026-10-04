@@ -8,29 +8,36 @@ APPROVED_FILE = "approved_users.json"
 
 def load_approved():
     try:
-        with open(APPROVED_FILE, "r") as f: return json.load(f)
-    except: return []
+        with open(APPROVED_FILE, "r") as f:
+            return json.load(f)
+    except:
+        return []
 
 def save_approved(data):
-    with open(APPROVED_FILE, "w") as f: json.dump(data, f)
+    with open(APPROVED_FILE, "w") as f:
+        json.dump(data, f)
 
-async def start(update, context):
-    await update.message.reply_text("TaskMaster Bot Live! Use /myid")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Bot cholche ✅ /myid likho")
 
-async def myid(update, context):
-    await update.message.reply_text(f"Your ID: {update.effective_user.id}")
+async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Tomar ID: {update.effective_user.id}")
 
-async def approve(update, context):
+async def approve(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id!= ADMIN_ID:
-        await update.message.reply_text("Not admin"); return
+        await update.message.reply_text("Tumi admin na")
+        return
     if len(context.args)!= 1:
-        await update.message.reply_text("Usage: /approve USER_ID"); return
-    uid = int(context.args[0]); approved = load_approved()
+        await update.message.reply_text("Use: /approve USER_ID")
+        return
+    uid = int(context.args[0])
+    approved = load_approved()
     if uid not in approved:
-        approved.append(uid); save_approved(approved)
-        await update.message.reply_text(f"Approved {uid}!")
+        approved.append(uid)
+        save_approved(approved)
+        await update.message.reply_text(f"Approved {uid}")
     else:
-        await update.message.reply_text("Already approved!")
+        await update.message.reply_text("Age thekei approved")
 
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
@@ -39,4 +46,5 @@ def main():
     app.add_handler(CommandHandler("approve", approve))
     app.run_polling()
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()
