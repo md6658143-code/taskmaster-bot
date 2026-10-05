@@ -10,9 +10,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def task(update: Update, context: ContextTypes.DEFAULT_TYPE):
     txt = " ".join(context.args)
     if not txt:
-        await update.message.reply_text("Likho: /task Buy milk")
+        await update.message.reply_text("Task likho: /task amar kaj")
         return
-    await update.message.reply_text(f"Task saved: {txt}")
+    await update.message.reply_text(f"Task save: {txt}")
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
